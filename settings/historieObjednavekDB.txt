@@ -1,0 +1,8 @@
+1;Prusament PLA Jet Black 1kg;2023-05-05;20;5;true
+2;Prusament PLA Jet Black 1kg;2022-05-05;10;1;true
+3;Prusament ASA Signal White 850g;2023-05-05;20;19;true
+4;Prusament PLA Jet Black 1kg;2023-05-05;20;10;true
+5;Prusament PLA Jet Black 1kg;2023-05-05;979.99;1;true
+5;Prusament PLA Jet Black 1kg;2023-05-05;979.9;1;true
+7;Prusament PLA Jet Black 1kg;2023-05-05;979.99;1;true
+8;Prusament PETG Prusa Orange 1kg;2023-05-05;10;10;false
