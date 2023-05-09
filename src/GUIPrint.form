@@ -211,7 +211,7 @@
           <grid id="79d02" binding="panelNastaveni" layout-manager="GridLayoutManager" row-count="20" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="5" left="5" bottom="5" right="5"/>
             <constraints>
-              <tabbedpane title="Nastavení"/>
+              <tabbedpane title="Ostatní"/>
             </constraints>
             <properties/>
             <border type="none"/>

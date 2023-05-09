@@ -1,1 +1,4 @@
-1;Prusament PLA Jet Black 1kg;Jet Black;PLA;868.0;./images/1.png;699;0.699
+1;Prusament PLA Jet Black 1kg;Jet Black;PLA;1000;./images/1.png;699;0.699
+2;Prusament PETG Prusa Orange 1kg;Orange;PETG;1000;./images/2.png;699;0.699
+3;Prusament PVB Bright Green Transparent 500g;Green Transparent;PVB;500;./images/3.png;599;1.198
+4;Prusament ASA Signal White 850g;Signal White;ASA;850;./images/4.png;699;0.8223529411764706

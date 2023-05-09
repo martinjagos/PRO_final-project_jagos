@@ -144,7 +144,6 @@ public class GUIPrint extends JFrame{
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Chyba při načítání souboru", "Chyba",JOptionPane.ERROR_MESSAGE);
         }
-        System.out.println(""+cenaEnegrii);
         textFieldCenaEnergie.setText(""+cenaEnegrii);
     }
     private void odectiFilament(){
@@ -197,7 +196,6 @@ public class GUIPrint extends JFrame{
         tableObjednavky.updateUI();
     }
     private void novaObjednavka() {
-        System.out.println(textFieldObjednavkaDatum.getText());
         if(textFieldObjednavkaDatum.getText().isEmpty() || textFieldObjednavkaSpotřeba.getText().isEmpty() || textFieldObjednavkaEnergie.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vyplňe všechna pole", "Chyba", JOptionPane.WARNING_MESSAGE);
         } else{
@@ -207,7 +205,6 @@ public class GUIPrint extends JFrame{
                         if(textFieldCenaEnergie.getText().isEmpty()) {
                             JOptionPane.showMessageDialog(null, "Nastavte cenu energií", "Chyba", JOptionPane.ERROR_MESSAGE);
                         } else{
-                            System.out.println(""+cenaEnegrii);
                             List<String> radky = new ArrayList<>();
                             try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File("./settings/historieObjednavekDB.txt"))))) {
                                 while (scanner.hasNextLine()) {
@@ -568,7 +565,6 @@ public class GUIPrint extends JFrame{
         g.setContentPane(g.panel1);
         g.setTitle("PrintEvidence");
         g.setSize(1200, 720);
-        //g.setExtendedState(g.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         g.setVisible(true);
         g.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

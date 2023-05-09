@@ -1,8 +1,0 @@
-1;Prusament PLA Jet Black 1kg;2022-05-05;10;10;true;7.055
-2;Prusament PLA Jet Black 1kg;2022-05-05;25.5;10;false;17.8855
-3;Prusament PLA Jet Black 1kg;2022-05-05;25.5;10;true;17.8895
-4;Prusament PLA Jet Black 1kg;2022-05-06;25.5;10;true;17.8895
-5;Prusament PLA Jet Black 1kg;2022-05-06;25.5;10;false;17.8545
-6;Prusament PLA Jet Black 1kg;2022-05-05;10;10;false;7.02
-7;Prusament PLA Jet Black 1kg;2022-05-05;10;1050;false;10.14
-8;Prusament PLA Jet Black 1kg;2022-05-05;10;0;false;6.989999999999999
