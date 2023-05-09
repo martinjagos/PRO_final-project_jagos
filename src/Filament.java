@@ -9,7 +9,9 @@ public class Filament {
     private String obrazek;
     private int cena;
 
-    public Filament(int id, String nazev, String barva, String material, double hmotnost, String obrazek, int cena) {
+    private double cenaNaGram;
+
+    public Filament(int id, String nazev, String barva, String material, double hmotnost, String obrazek, int cena, double cenaNaGram) {
         this.id = id;
         this.nazev = nazev;
         this.barva = barva;
@@ -17,6 +19,7 @@ public class Filament {
         this.hmotnost = hmotnost;
         this.obrazek = obrazek;
         this.cena = cena;
+        this.cenaNaGram = cenaNaGram;
     }
 
     public int getId() {
@@ -77,5 +80,13 @@ public class Filament {
 
     public void setCena(int cena) {
         this.cena = cena;
+    }
+
+    public double getCenaNaGram() {
+        return cenaNaGram;
+    }
+
+    public void setCenaNaGram(double cenaNaGram) {
+        this.cenaNaGram = cenaNaGram;
     }
 }

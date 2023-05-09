@@ -7,15 +7,16 @@ public class Objednavka {
     private double spotřeba;
     private double energie;
     private boolean vlastniModel;
-    // private double naklady;
+    private double naklady;
 
-    public Objednavka(int id, String filament, LocalDate datum, double spotřeba, double energie, boolean vlastniModel) {
+    public Objednavka(int id, String filament, LocalDate datum, double spotřeba, double energie, boolean vlastniModel, double naklady) {
         this.id = id;
         this.filament = filament;
         this.datum = datum;
         this.spotřeba = spotřeba;
         this.energie = energie;
         this.vlastniModel = vlastniModel;
+        this.naklady = naklady;
     }
 
     public int getId() {
@@ -64,5 +65,13 @@ public class Objednavka {
 
     public void setVlastniModel(boolean vlastniModel) {
         this.vlastniModel = vlastniModel;
+    }
+
+    public double getNaklady() {
+        return naklady;
+    }
+
+    public void setNaklady(double naklady) {
+        this.naklady = naklady;
     }
 }

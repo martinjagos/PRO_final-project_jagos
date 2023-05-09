@@ -48,6 +48,10 @@ public class GUIPrint extends JFrame{
     private JTextField textFieldUpravitCena;
     private JLabel labelNovaObjednavka;
     private JLabel labelHistorie;
+    private JLabel labelNastaveni;
+    private JTextField textFieldCenaEnergie;
+    private JButton potvrditButton;
+    private JTextField textFieldCenaZaG;
     private List<Filament> listFilament = new ArrayList<>();
     private List<Objednavka> listObjednavka = new ArrayList<>();
     private JFileChooser chooser = new JFileChooser("");
@@ -56,6 +60,7 @@ public class GUIPrint extends JFrame{
     private File selectedFileNovy = null;
     private File selectedFileUprava = null;
     private ObjTableModel objTableModel = new ObjTableModel(listObjednavka);
+    private double cenaEnegrii;
     public GUIPrint(){
         filamenty();
         nastaveni();
@@ -103,6 +108,44 @@ public class GUIPrint extends JFrame{
                 novaObjednavka();
             }
         });
+        potvrditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                zmenNastaveni();
+            }
+        });
+    }
+    private void zmenNastaveni(){
+        if(textFieldCenaEnergie.getText().isEmpty()){JOptionPane.showMessageDialog(null, "Vyplňe všechna pole", "Chyba", JOptionPane.WARNING_MESSAGE);}
+        else {
+            try{
+                cenaEnegrii = Double.parseDouble(textFieldCenaEnergie.getText());
+                List<String> novyList = new ArrayList<>();
+                novyList.add(textFieldCenaEnergie.getText());
+                try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("./settings/nastaveniDB.txt"))))) {
+                    novyList.forEach(s -> pw.println(s));
+                    nactiNastaveni();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Chyba při zapisování do souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Neplatné znaky", "Chyba", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }
+    private void nactiNastaveni(){
+        List<String> radky = new ArrayList<>();
+        radky.clear();
+        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File("./settings/nastaveniDB.txt"))))){
+            while (scanner.hasNextLine()){
+                cenaEnegrii = Double.parseDouble(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Chyba při načítání souboru", "Chyba",JOptionPane.ERROR_MESSAGE);
+        }
+        System.out.println(""+cenaEnegrii);
+        textFieldCenaEnergie.setText(""+cenaEnegrii);
     }
     private void odectiFilament(){
         List<String> novyList = new ArrayList<>();
@@ -120,7 +163,7 @@ public class GUIPrint extends JFrame{
                     novyList.add(radky.get(i));
                 }
                 double hmotnost = listFilament.get(id).getHmotnost()-Double.parseDouble(textFieldObjednavkaSpotřeba.getText());
-                novyList.add(listFilament.get(id).getId() + ";" + listFilament.get(id).getNazev() + ";" + listFilament.get(id).getBarva() + ";" + listFilament.get(id).getMaterial() + ";" + hmotnost+";"+listFilament.get(id).getObrazek()+";"+listFilament.get(id).getCena());
+                novyList.add(listFilament.get(id).getId() + ";" + listFilament.get(id).getNazev() + ";" + listFilament.get(id).getBarva() + ";" + listFilament.get(id).getMaterial() + ";" + hmotnost+";"+listFilament.get(id).getObrazek()+";"+listFilament.get(id).getCena()+";"+listFilament.get(id).getCenaNaGram());
                 for(int i = id+1; i < radky.size(); i++){
                     novyList.add(radky.get(i));
                 }
@@ -144,7 +187,7 @@ public class GUIPrint extends JFrame{
             while (scanner.hasNextLine()){
                 dalsiRadek = scanner.nextLine();
                 radek = dalsiRadek.split(";");
-                listObjednavka.add(new Objednavka(Integer.parseInt(radek[0]), radek[1], LocalDate.parse(radek[2]), Double.valueOf(radek[3]), Double.valueOf(radek[4]), Boolean.parseBoolean(radek[5])));
+                listObjednavka.add(new Objednavka(Integer.parseInt(radek[0]), radek[1], LocalDate.parse(radek[2]), Double.valueOf(radek[3]), Double.valueOf(radek[4]), Boolean.parseBoolean(radek[5]), Double.parseDouble(radek[6])));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -156,42 +199,46 @@ public class GUIPrint extends JFrame{
     private void novaObjednavka() {
         System.out.println(textFieldObjednavkaDatum.getText());
         if(textFieldObjednavkaDatum.getText().isEmpty() || textFieldObjednavkaSpotřeba.getText().isEmpty() || textFieldObjednavkaEnergie.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vyplňe všechna pole", "Chyba - Spotřeba", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vyplňe všechna pole", "Chyba", JOptionPane.WARNING_MESSAGE);
         } else{
             for (int ide = 0; ide < listFilament.size(); ide++) {
                 if (listFilament.get(ide).getNazev() == comboBoxFilament.getSelectedItem()) {
                     if (listFilament.get(ide).getHmotnost() > Double.parseDouble(textFieldObjednavkaSpotřeba.getText())) {
-                        List<String> radky = new ArrayList<>();
-                        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File("./settings/historieObjednavekDB.txt"))))) {
-                            while (scanner.hasNextLine()) {
-                                radky.add(scanner.nextLine());
+                        if(textFieldCenaEnergie.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Nastavte cenu energií", "Chyba", JOptionPane.ERROR_MESSAGE);
+                        } else{
+                            System.out.println(""+cenaEnegrii);
+                            List<String> radky = new ArrayList<>();
+                            try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File("./settings/historieObjednavekDB.txt"))))) {
+                                while (scanner.hasNextLine()) {
+                                    radky.add(scanner.nextLine());
+                                }
+                            } catch (FileNotFoundException e) {
+                                JOptionPane.showMessageDialog(null, "Chyba při načítání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
                             }
-                        } catch (FileNotFoundException e) {
-                            JOptionPane.showMessageDialog(null, "Chyba při načítání souboru", "Chyba", JOptionPane.ERROR_MESSAGE);
-                        }
-                        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("./settings/historieObjednavekDB.txt"))))) {
-                            boolean vlastniModel;
-                            if (checkBoxObjednavkaModel.isSelected()) {
-                                vlastniModel = true;
-                            } else {
-                                vlastniModel = false;
-                            }
-                            int id = listObjednavka.size() + 1;
-                            radky.add(id + ";" + comboBoxFilament.getSelectedItem().toString() + ";" + textFieldObjednavkaDatum.getText() + ";" + textFieldObjednavkaSpotřeba.getText() + ";" + textFieldObjednavkaEnergie.getText() + ";" + vlastniModel);
-                            radky.forEach(s -> pw.println(s));
-                            tableObjednavky.updateUI();
+                            try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("./settings/historieObjednavekDB.txt"))))) {
+                                boolean vlastniModel = checkBoxObjednavkaModel.isSelected();
+                                int id = listObjednavka.size() + 1;
+                                double naklad1 = listFilament.get(ide).getCenaNaGram() * Double.parseDouble(textFieldObjednavkaSpotřeba.getText());
+                                double naklad2 = Double.parseDouble(textFieldObjednavkaEnergie.getText()) / 1000;
+                                double naklad3 = naklad2 * cenaEnegrii;
+                                double nakladFinal = naklad1 + naklad3;
+                                radky.add(id + ";" + comboBoxFilament.getSelectedItem().toString() + ";" + textFieldObjednavkaDatum.getText() + ";" + textFieldObjednavkaSpotřeba.getText() + ";" + textFieldObjednavkaEnergie.getText() + ";" + vlastniModel + ";" + nakladFinal);
+                                radky.forEach(s -> pw.println(s));
+                                tableObjednavky.updateUI();
 
-                        } catch (IOException e) {
-                            JOptionPane.showMessageDialog(null, "Chyba při vytváření nové objednávky", "Chyba", JOptionPane.ERROR_MESSAGE);
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(null, "Chyba při vytváření nové objednávky", "Chyba", JOptionPane.ERROR_MESSAGE);
+                            }
+                            odectiFilament();
+                            comboBoxFilament.setSelectedIndex(0);
+                            textFieldObjednavkaDatum.setText("");
+                            textFieldObjednavkaSpotřeba.setText("");
+                            textFieldObjednavkaEnergie.setText("");
+                            checkBoxObjednavkaModel.setSelected(false);
+                            updateComboBox();
+                            nactiObjednavky();
                         }
-                        odectiFilament();
-                        comboBoxFilament.setSelectedIndex(0);
-                        textFieldObjednavkaDatum.setText("");
-                        textFieldObjednavkaSpotřeba.setText("");
-                        textFieldObjednavkaEnergie.setText("");
-                        checkBoxObjednavkaModel.setSelected(false);
-                        updateComboBox();
-                        nactiObjednavky();
                     } else {
                         JOptionPane.showMessageDialog(null, "Nedostatek filamentu", "Chyba", JOptionPane.ERROR_MESSAGE);
                     }
@@ -211,6 +258,7 @@ public class GUIPrint extends JFrame{
                 textFieldUpravaHmotnost.setText("" + listFilament.get(id).getHmotnost());
                 textFieldUpravitCena.setText(""+ listFilament.get(id).getCena());
                 labelUpravitObrazek.setText(listFilament.get(id).getObrazek());
+                textFieldCenaZaG.setText(""+listFilament.get(id).getCenaNaGram());
                 selectedFileUprava = null;
             }
         } catch (NumberFormatException e) {
@@ -227,7 +275,7 @@ public class GUIPrint extends JFrame{
             while (scanner.hasNextLine()){
                 dalsiRadek = scanner.nextLine();
                 radek = dalsiRadek.split(";");
-                radky.add(new Filament(Integer.parseInt(radek[0]), radek[1], radek[2], radek[3], Double.valueOf(radek[4]), radek[5], Integer.parseInt(radek[6])));
+                radky.add(new Filament(Integer.parseInt(radek[0]), radek[1], radek[2], radek[3], Double.valueOf(radek[4]), radek[5], Integer.parseInt(radek[6]), Double.parseDouble(radek[7])));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -281,7 +329,7 @@ public class GUIPrint extends JFrame{
         for(int i = 0; i < Integer.parseInt(textFieldUpravaID.getText())-1; i++){
             novyList.add(radky.get(i));
         }
-        novyList.add(textFieldUpravaID.getText() + ";" + textFieldUpravaNazev.getText() + ";" + textFieldUpravaBarva.getText() + ";" + textFieldUpravaMaterial.getText() + ";" + textFieldUpravaHmotnost.getText()+";"+"./images/"+textFieldUpravaID.getText()+".png"+";"+textFieldUpravitCena.getText());
+        novyList.add(textFieldUpravaID.getText() + ";" + textFieldUpravaNazev.getText() + ";" + textFieldUpravaBarva.getText() + ";" + textFieldUpravaMaterial.getText() + ";" + textFieldUpravaHmotnost.getText()+";"+"./images/"+textFieldUpravaID.getText()+".png"+";"+textFieldUpravitCena.getText()+";"+textFieldCenaZaG.getText());
         for(int i = Integer.parseInt(textFieldUpravaID.getText()); i < radky.size(); i++){
             novyList.add(radky.get(i));
         }
@@ -350,7 +398,8 @@ public class GUIPrint extends JFrame{
             }
             try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("./settings/filamentDB.txt"))))) {
                 int obrazekInt = listFilament.size() + 1;
-                radky.add(listFilament.size() + 1 + ";" + textFieldNazev.getText() + ";" + textFieldBarva.getText() + ";" + textFieldMaterial.getText() + ";" + textFieldHmotnost.getText()+";"+"./images/"+obrazekInt+".png"+";"+textFieldCena.getText());
+                double cena100g = Double.parseDouble(textFieldCena.getText()) / Double.parseDouble(textFieldHmotnost.getText());
+                radky.add(listFilament.size() + 1 + ";" + textFieldNazev.getText() + ";" + textFieldBarva.getText() + ";" + textFieldMaterial.getText() + ";" + textFieldHmotnost.getText()+";"+"./images/"+obrazekInt+".png"+";"+textFieldCena.getText()+";"+cena100g);
                 radky.forEach(s -> pw.println(s));
                 File sourceFile = selectedFileNovy;
                 int nazevSouboru = listFilament.size()+1;
@@ -380,6 +429,7 @@ public class GUIPrint extends JFrame{
             textFieldMaterial.setText("");
             textFieldHmotnost.setText("");
             labelObrázek.setText("");
+            textFieldCena.setText("");
             selectedFileNovy = null;
             loadFilament();
             vykresliFilament();
@@ -395,7 +445,7 @@ public class GUIPrint extends JFrame{
             while (scanner.hasNextLine()){
                 dalsiRadek = scanner.nextLine();
                 radek = dalsiRadek.split(";");
-                listFilament.add(new Filament(Integer.parseInt(radek[0]), radek[1], radek[2], radek[3], Double.valueOf(radek[4]), radek[5], Integer.parseInt(radek[6])));
+                listFilament.add(new Filament(Integer.parseInt(radek[0]), radek[1], radek[2], radek[3], Double.valueOf(radek[4]), radek[5], Integer.parseInt(radek[6]), Double.parseDouble(radek[7])));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -423,7 +473,9 @@ public class GUIPrint extends JFrame{
         tableObjednavky.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         tableObjednavky.getColumnModel().getColumn(3).setMaxWidth(70);
         tableObjednavky.getColumnModel().getColumn(4).setMaxWidth(70);
-        tableObjednavky.getColumnModel().getColumn(5).setMaxWidth(120);
+        tableObjednavky.getColumnModel().getColumn(5).setMaxWidth(150);
+        tableObjednavky.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        tableObjednavky.getColumnModel().getColumn(6).setMaxWidth(70);
         tableObjednavky.getTableHeader().setReorderingAllowed(false);
         updateComboBox();
         nactiObjednavky();
@@ -505,6 +557,10 @@ public class GUIPrint extends JFrame{
     private void nastaveni(){
         labelNovyFilament.setFont(new Font(labelNovyFilament.getFont().getFontName(), Font.BOLD, 20));
         labelUpravit.setFont(new Font(labelUpravit.getFont().getFontName(), Font.BOLD, 20));
+        labelNastaveni.setFont(new Font(labelNastaveni.getFont().getFontName(), Font.BOLD, 20));
+        nactiNastaveni();
+        textFieldCenaZaG.setEnabled(false);
+        textFieldUpravitCena.setEnabled(false);
     }
     public static void main(String[] args) {
         com.formdev.flatlaf.FlatDarkLaf.install();
@@ -519,7 +575,7 @@ public class GUIPrint extends JFrame{
 
     private static class ObjTableModel extends AbstractTableModel{
 
-        private final String[] COLUMNS = {"ID", "Filament", "Datum", "Spotřeba", "Energie", "Vlastní Model"};
+        private final String[] COLUMNS = {"ID", "Filament", "Datum", "Spotřeba", "Energie", "Vlastní Model", "Náklady"};
         private List<Objednavka> objednavky;
 
         public ObjTableModel(List<Objednavka> objednavky) {
@@ -546,9 +602,10 @@ public class GUIPrint extends JFrame{
                 case 0 -> String.valueOf(objednavky.get(rowIndex).getId());
                 case 1 -> objednavky.get(rowIndex).getFilament();
                 case 2 -> objednavky.get(rowIndex).getDatum().toString();
-                case 3 -> String.valueOf(objednavky.get(rowIndex).getSpotřeba());
-                case 4 -> String.valueOf(objednavky.get(rowIndex).getEnergie());
+                case 3 -> String.valueOf(objednavky.get(rowIndex).getSpotřeba() + " g");
+                case 4 -> String.valueOf(objednavky.get(rowIndex).getEnergie() + " Wh");
                 case 5 -> vlastniModel;
+                case 6 -> String.valueOf(objednavky.get(rowIndex).getNaklady() + " Kč");
                 default -> "-";
             };
         }
