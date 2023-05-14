@@ -37,3 +37,5 @@ Když otevřete aplikaci, tak nahoře uvidíte lištu s kartami - *Objednávky*,
 * Pro přidání ceny za energie vyplňte pole *Cena za energie* v v Korunách českých na kWh a odešlete tlačítkem *Potvrdit*.
 ## V. Omezení aplikace
 Požívání aplikace omezuje licence [GNU General Public License v2.0](https://github.com/martinjagos/PRO_final-project_jagos/blob/master/LICENSE).
+## VI. Externí knihovny
+* Knihovna FlatLaf - zajišťuje moderní vzhled aplikace © Copyright 2023 JFormDesigner podle licence *Apache-2.0 license*
