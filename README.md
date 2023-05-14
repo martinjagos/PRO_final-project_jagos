@@ -22,7 +22,7 @@ Když otevřete aplikaci, tak nahoře uvidíte lištu s kartami - *Objednávky*,
 ### B) Karta Filamenty
 * Na kartě *Filamenty* se vykreslují jednotlivé informace o nešem filamentu a obrázek filamentu. Zobrazují se zde informace - Název, Barva, Materiál, Hmotnost, ID neboli pořadové číslo a Cena.
 * Filamenty jsou pomocí GridLayout a BoxLayoaut zobrazovaní ve 3 sloupcích. Sloupce jsou dynamické, takže je možno vykreslovat několik filamentů. Panel, na kterém jsou filamenty vykreslené, se bude zvětšovat. Poté si můžeme listovat přes kolečko myši nebo posuvníkem na pravé straně.
-
+* Po instalaci aplikace jsou zde připravené 4 filamenty. Filamenty můžete odstranit na kartě *Nastavení* v sekci *Upravit filament*. Podrobný návod na odstranění filamentu naleznete níže.
 ### C) Karta Ostatní
 #### a) Sekce Přidat nový filament
 * V této sekci můžeme přidávat nové filamenty do seznamu našich filamentu. Po vyplnění všech polí a vybrání obrázku zmáčkneme tlačítko *Odeslat* a informace se uloží do souboru */settings/filamentDB.txt*, přidají se do seznamu filamentů, ihned se vykreslí na kartě *Filamenty* a nahraje se obrázek do složky */images/*
