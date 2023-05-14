@@ -1,6 +1,8 @@
 # PrintEvidence (PRO_final-project_jagos)
 ## I. Úvod
 Desktopová aplikace **PrintEvidence** napsaná v jazyce Java, která vznikla jako záverečný projekt II. ročníku v předmětu programování na škole Obchodní Akademie Uherské Hradiště, slouží k evidenci objednávek na 3D tisk a ke kontrole stavu filamentů. Aplikace umožňuje spravovat objednávky, sledovat stav zásob materiálu, vypočítání minimálních nákladů objednávky a další. Projekt vznikl i také díky mému koníčku - 3D tisk a modelování 3D modelů.
+
+Autorem projektu je **Martin Jagoš**.
 ## II. Požadavky na spoštění aplikace
 Aplikaci můžete spustit jako JAR soubor nebo jako projekt Java. Pro spuětění jak JAR souboru, tak i samotného kódu, je potřeba verze JDK 20. Komprimovanou složku se souborem JAR naleznete [zde](https://github.com/martinjagos/PRO_final-project_jagos/releases). Aplikace vyžaduje externí balíček Flatlaf 3.0, který naleznete v kódu aplikace.
 ## III. Instalace souboru JAR
